@@ -21,9 +21,9 @@ print(continous.head())
 print(binary.head())
 
 
-classesTrain, classesTest = train_test_split(classes, test_size=0.2)
-continousTrain, continousTest = train_test_split(continous, test_size=0.2)
-binaryTrain, binaryTest = train_test_split(binary, test_size=0.2)
+classesTrain, classesTest = train_test_split(classes, test_size=0.2, shuffle=False)
+continousTrain, continousTest = train_test_split(continous, test_size=0.2, shuffle=False)
+binaryTrain, binaryTest = train_test_split(binary, test_size=0.2, shuffle=False)
 
 # print(df[54].value_counts().index)
 occurrences = df[54].value_counts()
@@ -39,7 +39,7 @@ weights = []
 # print(continous.head())
 # print(binary.head())
 start_time = time.time()
-modelBernoulli = BernoulliNB(alpha=1)
+modelBernoulli = BernoulliNB(alpha=0.1)
 modelBernoulli.fit(binaryTrain, classesTrain)
 
 modelGausian = GaussianNB()

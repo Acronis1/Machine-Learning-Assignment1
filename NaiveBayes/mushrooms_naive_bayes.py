@@ -20,7 +20,7 @@ df.fillna(df.mode().iloc[0], inplace=True)
 print(df["class"].value_counts())
 
 classes = df.get("class")
-classes, stuff = train_test_split(classes, test_size=0.2)
+classes, stuff = train_test_split(classes, test_size=0.2, shuffle=False)
 df.drop(columns=["class"], inplace=True)
 
 # one hot encoding
@@ -31,7 +31,7 @@ df = df.apply(LabelEncoder().fit_transform)
 
 print(df.head())
 
-train, test = train_test_split(df, test_size=0.2)
+train, test = train_test_split(df, test_size=0.2, shuffle=False)
 
 start_time = time.time()
 
