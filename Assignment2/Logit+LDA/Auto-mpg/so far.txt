@@ -1,0 +1,2 @@
+Best prediction is achieved by using natural cubic splines to predict the log(mpg) ~ 2,83 RMSE.
+
