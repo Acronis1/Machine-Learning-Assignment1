@@ -23,8 +23,8 @@ from keras.layers import Convolution2D, MaxPooling2D, Dense, Dropout, Activation
 from keras.layers.normalization import BatchNormalization
 
 
-DIM = 150   #define what resolution the pics should be, DIM X DIM
-EPOCHS = 30
+DIM = 75   #define what resolution the pics should be, DIM X DIM
+EPOCHS = 25
 OPT = 'adam'
 LOSS = 'sparse_categorical_crossentropy'
 
@@ -71,6 +71,7 @@ i=0
 for j in range(0,len(images)):
 	try:
 		images[j] = keras.utils.normalize(images[j], axis=2)
+		#images[j] = keras.utils.normalize(images[j], axis=1)
 		print(i)
 	except:
 		print("it seems that this image is not in RGB")
@@ -116,7 +117,10 @@ print("the accuracy of the model is: ", val_acc)
 
 #with 150x150 accuracy is 5%
 #with 200x200 accuracy is 6,28%
-
+#with 80x80 accuracy is 25,1%
+#with 75x75 accuracy is 27,7% without normalization 3%
+#with 60x60 accuracy is 24,3%
+#with 50x50 accuracy is 22%
 
 predictions = model.predict_classes(x_test)
 print(predictions)
@@ -150,7 +154,7 @@ def plot_confusion_matrix(cm, classes,
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
+    plt.xticks(tick_marks, classes, rotation=90)
     plt.yticks(tick_marks, classes)
 
     fmt = '.2f' if normalize else 'd'
@@ -170,3 +174,45 @@ plt.figure()
 plot_confusion_matrix(cnf_matrix, classes=fruit_names,
                       title=str('Confusion matrix, acc='+str(val_acc)))
 plt.show()
+
+
+
+###################################################################
+"""
+Uncomment this to see how the model performs with image generator
+results so far with dim = 75, epoch = 25 acc=23,4%
+
+
+from keras.preprocessing.image import ImageDataGenerator
+
+datagen = ImageDataGenerator(
+    rotation_range=20,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True)
+
+model.fit_generator(datagen.flow(x_train, y_train, batch_size=16),
+                    samples_per_epoch=len(x_train), nb_epoch=EPOCHS)
+
+val_loss, val_acc = model.evaluate(x_test, y_test)
+print("the accuracy of the model is: ", val_acc)
+
+predictions = model.predict_classes(x_test)
+print(predictions)
+
+
+print("size of pred is : ", len(predictions))
+predictions = list(le.inverse_transform(predictions.astype(int)))
+y_test = list(le.inverse_transform(y_test.astype(int)))
+
+cnf_matrix = confusion_matrix(y_test, predictions)
+
+plt.figure()
+plot_confusion_matrix(cnf_matrix, classes=fruit_names,
+                      title=str('Confusion matrix, acc='+str(val_acc)))
+plt.show()
+
+
+"""
+############################################################
