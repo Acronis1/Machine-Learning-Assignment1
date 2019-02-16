@@ -23,8 +23,8 @@ from keras.layers import Convolution2D, MaxPooling2D, Dense, Dropout, Activation
 from keras.layers.normalization import BatchNormalization
 
 
-DIM = 75   #define what resolution the pics should be, DIM X DIM
-EPOCHS = 25
+DIM = 100   #define what resolution the pics should be, DIM X DIM
+EPOCHS = 100
 OPT = 'adam'
 LOSS = 'sparse_categorical_crossentropy'
 
@@ -97,13 +97,14 @@ img_array = np.array(images, dtype=config.floatX)
 
 x_train, x_test, y_train, y_test = train_test_split(img_array, classes, test_size=0.2, random_state=42)
 
-print(x_train.shape)
-print(y_train.shape)
+print("shape of the training images: ",x_train.shape)
+print("shape of the labels: ",y_train.shape)
 
 n_filters = 16
 
+"""
 model = Sequential()
-model.add(Flatten(input_shape=(DIM,DIM,3)))
+model.add(Flatten(input_shape=(None,None,3)))
 model.add(Dense(150, activation=tf.nn.relu))
 model.add(Dense(150, activation=tf.nn.relu))
 model.add(Dense(30, activation=tf.nn.softmax)) #30 is the number of classes that we have
@@ -115,12 +116,67 @@ model.fit(x_train, y_train, epochs=EPOCHS)
 val_loss, val_acc = model.evaluate(x_test, y_test)
 print("the accuracy of the model is: ", val_acc)
 
+predictions = model.predict_classes(x_test)
+print(predictions)
+
+
+print("size of pred is : ", len(predictions))
+predictions = list(le.inverse_transform(predictions.astype(int)))
+y_test = list(le.inverse_transform(y_test.astype(int)))
+
+print("the predictions are: ",predictions)
+print("the actual labels: ",y_test)
+"""
 #with 150x150 accuracy is 5%
 #with 200x200 accuracy is 6,28%
 #with 80x80 accuracy is 25,1%
 #with 75x75 accuracy is 27,7% without normalization 3%
 #with 60x60 accuracy is 24,3%
 #with 50x50 accuracy is 22%
+
+##########################
+#CNN based on the example of TensorFlow: 
+
+
+from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Conv2D, MaxPooling2D
+
+print("Creating CNN model")
+
+LR = 1e-3
+
+model = Sequential()
+
+model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(DIM, DIM, 3)))
+model.add(MaxPooling2D(pool_size=(2, 2)))
+model.add(Dropout(0.15))
+
+model.add(Conv2D(128, kernel_size=(5, 5), activation='relu'))
+model.add(MaxPooling2D(pool_size=(4, 4)))
+model.add(Dropout(0.25))
+
+model.add(Conv2D(256, kernel_size=(7, 7), activation='relu'))
+model.add(Dropout(0.35))
+
+
+model.add(Flatten())
+
+model.add(Dense(120, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(60, activation='relu'))
+model.add(Dropout(0.4))
+
+model.add(Dense(30, activation='softmax'))
+
+model.compile(loss=LOSS, optimizer=OPT, metrics=['accuracy'])
+#fitting:
+
+
+
+model.fit(x_train, y_train, epochs=EPOCHS)
+
+val_loss, val_acc = model.evaluate(x_test, y_test)
+print("the accuracy of the model is: ", val_acc)
 
 predictions = model.predict_classes(x_test)
 print(predictions)
@@ -130,8 +186,11 @@ print("size of pred is : ", len(predictions))
 predictions = list(le.inverse_transform(predictions.astype(int)))
 y_test = list(le.inverse_transform(y_test.astype(int)))
 
-print(predictions)
-print(y_test)
+print("the predictions are: ",predictions)
+print("the actual labels: ",y_test)
+
+##########################
+
 
 #function for the plot of conf matrix:
 def plot_confusion_matrix(cm, classes,
@@ -199,7 +258,8 @@ val_loss, val_acc = model.evaluate(x_test, y_test)
 print("the accuracy of the model is: ", val_acc)
 
 predictions = model.predict_classes(x_test)
-print(predictions)
+print("the predictions are: ",predictions)
+print("the actual labels: ",y_test)
 
 
 print("size of pred is : ", len(predictions))
