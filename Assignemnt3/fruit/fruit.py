@@ -103,6 +103,7 @@ print("shape of the labels: ",y_train.shape)
 n_filters = 16
 
 """
+#######################################################
 model = Sequential()
 model.add(Flatten(input_shape=(DIM,DIM,3)))
 model.add(Dense(150, activation=tf.nn.relu))
@@ -111,7 +112,12 @@ model.add(Dense(30, activation=tf.nn.softmax)) #30 is the number of classes that
 
 model.compile(optimizer=OPT ,loss=LOSS ,metrics=['accuracy'])
 
+currentDT = datetime.datetime.now()
+
 model.fit(x_train, y_train, epochs=EPOCHS)
+
+print("Building the DNN model took: ", datetime.datetime.now()-currentDT," with ",EPOCHS," number of EPOCHS")
+
 
 val_loss, val_acc = model.evaluate(x_test, y_test)
 print("the accuracy of the model is: ", val_acc)
@@ -126,7 +132,9 @@ y_test = list(le.inverse_transform(y_test.astype(int)))
 
 print("the predictions are: ",predictions)
 print("the actual labels: ",y_test)
+#######################################################
 """
+
 #with 150x150 accuracy is 5%
 #with 200x200 accuracy is 6,28%
 #with 80x80 accuracy is 25,1%
@@ -137,6 +145,7 @@ print("the actual labels: ",y_test)
 ##########################
 #CNN based on the example of TensorFlow: 
 
+#######################################################
 
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -171,9 +180,11 @@ model.add(Dense(30, activation='softmax'))
 model.compile(loss=LOSS, optimizer=OPT, metrics=['accuracy'])
 #fitting:
 
-
+currentDT = datetime.datetime.now()
 
 model.fit(x_train, y_train, epochs=EPOCHS)
+
+print("Building the DNN model took: ", datetime.datetime.now()-currentDT," with ",EPOCHS," number of EPOCHS")
 
 val_loss, val_acc = model.evaluate(x_test, y_test)
 print("the accuracy of the model is: ", val_acc)
@@ -189,8 +200,7 @@ y_test = list(le.inverse_transform(y_test.astype(int)))
 print("the predictions are: ",predictions)
 print("the actual labels: ",y_test)
 
-##########################
-
+#######################################################
 
 #function for the plot of conf matrix:
 def plot_confusion_matrix(cm, classes,
@@ -236,7 +246,7 @@ plt.show()
 
 
 
-###################################################################
+#######################################################
 """
 Uncomment this to see how the model performs with image generator
 results so far with dim = 75, epoch = 25 acc=23,4%
@@ -275,4 +285,4 @@ plt.show()
 
 
 """
-############################################################
+#######################################################
