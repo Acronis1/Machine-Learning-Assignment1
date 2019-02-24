@@ -104,7 +104,7 @@ n_filters = 16
 
 """
 model = Sequential()
-model.add(Flatten(input_shape=(None,None,3)))
+model.add(Flatten(input_shape=(DIM,DIM,3)))
 model.add(Dense(150, activation=tf.nn.relu))
 model.add(Dense(150, activation=tf.nn.relu))
 model.add(Dense(30, activation=tf.nn.softmax)) #30 is the number of classes that we have

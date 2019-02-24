@@ -1,0 +1,78 @@
+----------------------------------------
+Description
+----------------------------------------
+This program trains the SVM and MLP classifier from sklearn on the car or the fruit data sets.
+
+When not specifying any parameters the classifiers are trained on the fruit data as default
+and a gridsearch is done with the following parameter lists:
+
+SVM:
+				kernels = ['linear', 'poly', 'rbf', 'sigmoid']
+        shrinking = [True, False]
+        c = [0.5, 1, 1.5, 2, 3]
+        gamma = [0.00001, 0.0001, 0.2, 0.3, 'scale', 'auto']
+        probability = [True, False]
+
+MLP:
+        solver = ['lbfgs', 'sgd', 'adam']
+        activation = ['relu', 'logistic']
+        learning_rate = ['constant', 'invscaling', 'adaptive']
+        batch_size = [1, 2, 3, 5, 10]
+        hidden_layer_sizes = [50, 100, 150]
+
+The parameters from the lists above can also be given via commandline and will replace the gridsearch list for the given parameters.
+The parameter lists for the grid searches can be edited in the BOVHelper.py file in the train function.
+
+----------------------------------------
+install
+----------------------------------------
+for python dependencies:
+pip install -r requirements.txt
+
+Since the algorithm for SIFT feature computation is licenced, you have to compile openCV yourself with a specific flag.
+You can follow the description from this link: http://dkhoa.me/docs/opencv3_nonfree/
+
+Now everything should work.
+
+----------------------------------------
+usage
+----------------------------------------
+For default behaviour (grid search with 80/20 train/test split) use:
+
+~$ python3 SiftClassifier.py
+
+
+For specific parameters:
+usage: SiftClassifier.py [-h] [--split SPLIT] [-d DATA]
+                         [-k {linear,poly,rbf,sigmoid}] [-s] [-c C] [-g GAMMA]
+                         [-p] [-slv {lbfgs,sgd,adam}]
+                         [-a {relu,logistic,tanh,identity}]
+                         [-l {constant,invscaling,adaptive}] [-b BATCH_SIZE]
+                         [-hl HIDDEN_LAYER_SIZES]
+
+SVM and MLP classifying with SIFT features
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --split SPLIT         Train/Test split
+  -d DATA               data set to train on
+  -k {linear,poly,rbf,sigmoid}
+                        SVM kernel
+  -s                    Shrinking heuristic true/false
+  -c C                  Penalty parameter C of the error term
+  -g GAMMA              Kernel coefficient for ‘rbf’, ‘poly’ and ‘sigmoid’
+  -p                    Whether to enable probability estimates
+  -slv {lbfgs,sgd,adam}
+                        The solver for weight optimization
+  -a {relu,logistic,tanh,identity}
+                        Activation function for the hidden layer
+  -l {constant,invscaling,adaptive}
+                        learning_rate
+  -b BATCH_SIZE         Size of minibatches for stochastic optimizers
+  -hl HIDDEN_LAYER_SIZES
+                        The ith element represents the number of neurons in
+                        the ith hidden layer, default (100,)
+
+
+
+
